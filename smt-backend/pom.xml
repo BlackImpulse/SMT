@@ -14,7 +14,8 @@
     <properties>
         <java.version>11</java.version>
         <liguibase.version>4.3.2</liguibase.version>
-        <mysql-connector-version>8.0.22</mysql-connector-version>
+        <mysql-connector.version>8.0.22</mysql-connector.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
     </properties>
 
     <dependencies>
@@ -42,7 +43,13 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector-version}</version>
+            <version>${mysql-connector.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
 
         <dependency>
