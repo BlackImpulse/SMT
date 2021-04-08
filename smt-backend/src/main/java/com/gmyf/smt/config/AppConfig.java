@@ -1,6 +1,7 @@
 package com.gmyf.smt.config;
 
 import liquibase.integration.spring.SpringLiquibase;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,11 @@ import java.util.Properties;
 public class AppConfig {
     @Autowired
     private Environment environment;
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
     @Bean
     public SpringLiquibase liquibase() {

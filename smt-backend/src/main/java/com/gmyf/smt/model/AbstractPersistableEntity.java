@@ -9,7 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class AbstractPersistableEntity implements PersistableEntity {
+public abstract class AbstractPersistableEntity implements PersistableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
