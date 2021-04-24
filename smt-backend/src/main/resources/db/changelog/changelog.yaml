@@ -30,3 +30,19 @@ databaseChangeLog:
                   type: smalldatetime
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 2
+      author: Sergey
+      changes:
+        - insert:
+            tableName: USER
+            columns:
+              - column:
+                  name: USERNAME
+                  value: sergey
+              - column:
+                  name: PASSWORD
+                  value: $2a$10$DQi9rbaUeBa/MiV.KW7zouKXNjyZUuDFC8PUsPk/nboU2XvcAgFSi
+              - column:
+                  name: REGISTRATION_DATE
+                  value: "2021-04-24 00:00:00"
