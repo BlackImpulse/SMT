@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserDtoConverter extends AbstractDtoConverter<User, UserDto>{
-
     public UserDtoConverter() {
         super(User.class, UserDto.class);
     }

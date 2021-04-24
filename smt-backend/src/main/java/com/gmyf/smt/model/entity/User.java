@@ -11,7 +11,7 @@ import java.sql.Date;
 @Table(name = "user")
 public class User extends AbstractPersistableEntity {
     @Column(name = "username")
-    private String userName;
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -22,18 +22,18 @@ public class User extends AbstractPersistableEntity {
     public User() {
     }
 
-    public User(String userName, String password, Date registrationDate) {
-        this.userName = userName;
+    public User(String username, String password, Date registrationDate) {
+        this.username = username;
         this.password = password;
         this.registrationDate = registrationDate;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public String getPassword() {

@@ -11,9 +11,10 @@ import com.gmyf.smt.service.dtoconverter.UserDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NoResultException;
+
 @Service
 public class UserServiceImpl extends AbstractService<User, UserDto> implements UserService {
-
     private UserDao userDao;
     private UserDtoConverter userDtoConverter;
 
@@ -22,5 +23,15 @@ public class UserServiceImpl extends AbstractService<User, UserDto> implements U
         super(genericDao, abstractDtoConverter);
         this.userDao = userDao;
         this.userDtoConverter = userDtoConverter;
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        try {
+            UserDto user = userDtoConverter.convertToDto(userDao.getUserByUsername(username));
+            return user != null;
+        } catch (NoResultException exception) {
+            return false;
+        }
     }
 }

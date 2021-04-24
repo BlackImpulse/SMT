@@ -3,5 +3,15 @@ spring:
     url: jdbc:mysql://localhost:3306/smt?serverTimezone=UTC
     username: root
     password: root
-    driverClassName: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
+hibernate:
+  dialect: org.hibernate.dialect.MySQLDialect
+  show-sql: true
+  format-sql: false
+  ddl-auto: auto
+
+smt:
+  app:
+    jwtSecret: smtSecretKey
+    jwtExpirationMs: 86400000

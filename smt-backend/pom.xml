@@ -20,6 +20,7 @@
         <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
         <mapper.version>2.3.9</mapper.version>
         <spring-security.version>5.4.2</spring-security.version>
+        <jwt.version>0.9.1</jwt.version>
     </properties>
 
     <dependencies>
@@ -111,6 +112,12 @@
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>${mapper.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jwt.version}</version>
         </dependency>
 
         <dependency>

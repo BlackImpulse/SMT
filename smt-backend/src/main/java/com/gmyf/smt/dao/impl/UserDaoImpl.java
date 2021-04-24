@@ -5,6 +5,7 @@ import com.gmyf.smt.dao.api.UserDao;
 import com.gmyf.smt.model.entity.User;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,7 +18,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public User getUserByUserName(String userName) {
+    public User getUserByUsername(String userName) throws NoResultException {
         CriteriaBuilder criteriaBuilder = sessionFactory.getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> rootEntry = criteriaQuery.from(User.class);
