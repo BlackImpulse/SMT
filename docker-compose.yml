@@ -1,0 +1,65 @@
+version: '3'
+services:
+  smt-backend:
+    build:
+      context: ./smt-backend
+      dockerfile: Dockerfile
+    hostname: smt-backend
+    container_name: smt-backend
+    depends_on:
+      - mysql
+    environment:
+      VERSION: "1.0.0"
+    ports:
+      - 8080:8080
+      - 5009:5009
+    volumes:
+      - ./smt-backend/target:/usr/local/share/smt-backend
+      - ./smt-backend/entrypoint.sh:/usr/local/share/smt-backend/entrypoint.sh
+
+  smt-frontend:
+    container_name: smt-frontend
+    build:
+      context: ./smt-frontend
+      dockerfile: Dockerfile
+    volumes:
+      - './smt-frontend:/app'
+      - '/app/node_modules'
+
+  zookeeper-leader:
+    build:
+      context: ./kafka-server
+      dockerfile: Dockerfile
+    hostname: zookeeper-leader
+    container_name: zookeeper-leader
+    environment:
+      RUN_ZOOKEEPER: 1
+      RUN_KAFKA_SERVER: 0
+    volumes:
+      - ./kafka-server/init-topics.sh:/init-topics.sh
+    entrypoint: ["/init-topics.sh"]
+
+  kafka-server:
+    build:
+      context: ./kafka-server
+      dockerfile: Dockerfile
+    hostname: kafka-server
+    container_name: kafka-server
+    restart: always
+    environment:
+      ADVERTISED_HOSTS: "PLAINTEXT://kafka-server:9092"
+      BROKER_ID: 1
+      ZOOKEEPER_HOST: "zookeeper-leader:2181"
+      TOPIC_AUTOCREATE: "false"
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=smt
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    ports:
+      - 3306:3306
+    restart: always

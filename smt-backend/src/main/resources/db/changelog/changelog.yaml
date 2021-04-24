@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/changelog.yaml
+  - changeSet:
+      id: 1
+      author: Sergey
+      changes:
+        - createTable:
+            tableName: USER
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: USERNAME
+                  type: varchar(15)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: PASSWORD
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: REGISTRATION_DATE
+                  type: smalldatetime
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: Sergey
+      changes:
+        - insert:
+            tableName: USER
+            columns:
+              - column:
+                  name: USERNAME
+                  value: sergey
+              - column:
+                  name: PASSWORD
+                  value: $2a$10$DQi9rbaUeBa/MiV.KW7zouKXNjyZUuDFC8PUsPk/nboU2XvcAgFSi
+              - column:
+                  name: REGISTRATION_DATE
+                  value: "2021-04-24 00:00:00"
