@@ -43,7 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authEntryPointJwt)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().antMatchers("api/auth/**").permitAll().anyRequest().authenticated();
+                .and().authorizeRequests().antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/").permitAll()
+                .anyRequest().authenticated();
 
         http.addFilterBefore(authJwnTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
