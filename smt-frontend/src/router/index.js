@@ -4,6 +4,8 @@ import Home from '@/components/Home'
 import Signup from "@/components/Signup";
 import NotFound from "@/components/NotFound";
 import Login from "@/components/Login";
+import Spotify from "@/components/Spotify";
+import Youtube from "@/components/Youtube";
 
 Vue.use(Router);
 
@@ -24,6 +26,16 @@ export default new Router({
             path: '/login',
             name: 'Login',
             component: Login
+        },
+        {
+            path: '/spotify',
+            component: Spotify,
+            props: route => ({code: route.query.code})
+        },
+        {
+            path: '/youtube',
+            component: Youtube,
+            props: route => ({code: route.query.code})
         },
         {
             path: '*',
