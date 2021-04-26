@@ -15,8 +15,8 @@ import javax.persistence.NoResultException;
 
 @Service
 public class UserServiceImpl extends AbstractService<User, UserDto> implements UserService {
-    private UserDao userDao;
-    private UserDtoConverter userDtoConverter;
+    private final UserDao userDao;
+    private final UserDtoConverter userDtoConverter;
 
     @Autowired
     public UserServiceImpl(GenericDao<User> genericDao, AbstractDtoConverter<User, UserDto> abstractDtoConverter, UserDao userDao, UserDtoConverter userDtoConverter) {
@@ -32,6 +32,15 @@ public class UserServiceImpl extends AbstractService<User, UserDto> implements U
             return user != null;
         } catch (NoResultException exception) {
             return false;
+        }
+    }
+
+    @Override
+    public UserDto getByUsername(String username) {
+        try {
+            return userDtoConverter.convertToDto(userDao.getUserByUsername(username));
+        } catch (NoResultException exception) {
+            return null;
         }
     }
 }
