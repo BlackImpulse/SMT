@@ -11,6 +11,8 @@
                type="text"
                name="username"
                required=""
+               minlength="4"
+               maxlength="9"
                autocomplete="off">
         <img src="../assets/pics/profile-user.svg" alt="user_icon"/>
       </div>
@@ -19,6 +21,8 @@
                v-model="password"
                type="text" name="password"
                required=""
+               minlength="4"
+               maxlength="9"
                autocomplete="off">
         <img src="../assets/pics/keys-hole.svg" alt="password_icon"/>
       </div>
