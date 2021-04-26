@@ -21,6 +21,7 @@
         <mapper.version>2.3.9</mapper.version>
         <spring-security.version>5.4.2</spring-security.version>
         <jwt.version>0.9.1</jwt.version>
+        <spotify.version>6.5.4</spotify.version>
     </properties>
 
     <dependencies>
@@ -118,6 +119,12 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>se.michaelthelin.spotify</groupId>
+            <artifactId>spotify-web-api-java</artifactId>
+            <version>${spotify.version}</version>
         </dependency>
 
         <dependency>
