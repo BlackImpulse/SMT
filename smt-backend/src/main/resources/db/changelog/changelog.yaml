@@ -46,3 +46,166 @@ databaseChangeLog:
               - column:
                   name: REGISTRATION_DATE
                   value: "2021-04-24 00:00:00"
+  - changeSet:
+      id: 3
+      author: Sergey
+      changes:
+        - createTable:
+            tableName: SERVICE
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: SERVICE
+                  type: varchar(25)
+                  constraints:
+                    unique: true
+                    nullable: false
+  - changeSet:
+      id: 4
+      author: Sergey
+      changes:
+        - insert:
+            tableName: SERVICE
+            columns:
+              - column:
+                  name: SERVICE
+                  value: Spotify
+        - insert:
+            tableName: SERVICE
+            columns:
+              - column:
+                  name: SERVICE
+                  value: YouTube
+  - changeSet:
+      id: 5
+      author: Sergey
+      changes:
+        - createTable:
+            tableName: TOKEN
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: USER_ID
+                  type: INT
+                  constraints:
+                    foreignKeyName: FK_TOKENS_USER
+                    nullable: false
+                    references: USER(ID)
+              - column:
+                  name: TOKEN
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SERVICE_ID
+                  type: INT
+                  constraints:
+                    foreignKeyName: FK_TOKENS_SERVICE
+                    nullable: false
+                    references: SERVICE(ID)
+  - changeSet:
+      id: 6
+      author: Sergey
+      changes:
+        - createTable:
+            tableName: MIGRATION_TYPE
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: TYPE
+                  type: varchar(25)
+                  constraints:
+                    unique: true
+                    nullable: false
+  - changeSet:
+      id: 7
+      author: Sergey
+      changes:
+        - insert:
+            tableName: MIGRATION_TYPE
+            columns:
+              - column:
+                  name: TYPE
+                  value: Albums
+        - insert:
+            tableName: MIGRATION_TYPE
+            columns:
+              - column:
+                  name: TYPE
+                  value: Playlists
+        - insert:
+            tableName: MIGRATION_TYPE
+            columns:
+              - column:
+                  name: TYPE
+                  value: Tracks
+  - changeSet:
+      id: 8
+      author: Sergey
+      changes:
+        - createTable:
+            tableName: MIGRATION
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: USER_ID
+                  type: INT
+                  constraints:
+                    foreignKeyName: FK_MIGRATIONS_USER
+                    nullable: false
+                    references: USER(ID)
+              - column:
+                  name: DATE
+                  type: smalldatetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FROM_SERVICE_ID
+                  type: INT
+                  constraints:
+                    foreignKeyName: FK_MIGRATIONS_FROM_SERVICE
+                    nullable: false
+                    references: SERVICE(ID)
+              - column:
+                  name: TO_SERVICE_ID
+                  type: INT
+                  constraints:
+                    foreignKeyName: FK_MIGRATIONS_TO_SERVICE
+                    nullable: false
+                    references: SERVICE(ID)
+              - column:
+                  name: MIGRATION_TYPE_ID
+                  type: INT
+                  constraints:
+                    foreignKeyName: FK_MIGRATIONS_MIGRATION_TYPE
+                    nullable: false
+                    references: MIGRATION_TYPE(ID)
+              - column:
+                  name: ITEMS_COUNT
+                  type: INT
+                  constraints:
+                    nullable: false
