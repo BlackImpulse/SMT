@@ -1,6 +1,7 @@
 package com.gmyf.smt.controller;
 
 import com.gmyf.smt.factory.ServiceApiFactory;
+import com.gmyf.smt.factory.api.ServiceApi;
 import com.gmyf.smt.payload.TokenPayload;
 import com.gmyf.smt.service.api.TokenService;
 import com.gmyf.smt.service.dto.TokenDto;
@@ -20,7 +21,7 @@ public class TokenController {
         TokenDto tokenDto = tokenService.getTokenByUserIdAndServiceId(userId, serviceId);
 
         if (tokenDto != null) {
-            tokenPayload.setToken(tokenDto);
+            tokenPayload.setToken(tokenDto.getAccessToken());
         } else {
             String url = ServiceApiFactory.getServiceApi(serviceId).getAuthUrl();
             tokenPayload.setUrl(url);
@@ -30,7 +31,11 @@ public class TokenController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody TokenDto tokenDto) {
+    public ResponseEntity<?> save(@RequestBody TokenDto tokenDto, @RequestParam String code) {
+        ServiceApi serviceApi = ServiceApiFactory.getServiceApi(tokenDto.getService().getId());
+        String[] tokens = serviceApi.getTokens(code);
+        tokenDto.setAccessToken(tokens[0]);
+        tokenDto.setRefreshToken(tokens[1]);
         tokenService.saveOrUpdate(tokenDto);
         return ResponseEntity.ok().build();
     }

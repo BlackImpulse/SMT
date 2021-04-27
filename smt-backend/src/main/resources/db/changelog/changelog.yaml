@@ -104,7 +104,12 @@ databaseChangeLog:
                     nullable: false
                     references: USER(ID)
               - column:
-                  name: TOKEN
+                  name: ACCESS_TOKEN
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: REFRESH_TOKEN
                   type: varchar(255)
                   constraints:
                     nullable: false

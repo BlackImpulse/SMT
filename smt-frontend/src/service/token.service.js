@@ -10,8 +10,8 @@ class TokenService {
         });
     }
 
-    saveToken(token) {
-        return axios.post(API_URL + 'save', {
+    saveToken(token, code) {
+        return axios.post(API_URL + `save?code=${code}`, {
             ...token
         }, {
             headers: authHeader()
