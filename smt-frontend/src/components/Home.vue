@@ -1,15 +1,142 @@
 <template>
   <div class="home">
-    <h1>{{msg}}</h1>
+    <div class="main-screen">
+      <p>TRANSFER YOUR PLAYLIST AND FAVORITES</p>
+      <img src="../assets/pics/song_wave.png" alt="SongWave" class="song-wave"/>
+    </div>
+    <div class="migration-screen">
+      <div class="from-container">
+        <div id="from" class="services">
+        <img id="1_from" src="../assets/pics/spotify.png" alt="Spotify"/>
+        <img id="2_from" src="../assets/pics/youtube.png" alt="Youtube"/>
+        <img id="3_from" src="../assets/pics/boom.png" alt="Boom" title="Coming soon"/>
+        <img id="4_from" src="../assets/pics/yandex.png" alt="Yandex" title="Coming soon"/>
+        <img id="5_from" src="../assets/pics/apple.png" alt="Apple" title="Coming soon"/>
+      </div>
+        <div class="items-checkboxes">
+        <label> Albums
+          <input id="albums" type="checkbox" v-model="albumsChecked" @input="onItemsCheck"/>
+        </label>
+        <label> Playlists
+          <input id="playlists" type="checkbox" v-model="playlistsChecked" @input="onItemsCheck"/>
+        </label>
+        <label> Tracks
+          <input id="tracks" type="checkbox" v-model="tracksChecked" @input="onItemsCheck"/>
+        </label>
+      </div>
+        <div class="items-container">
+        <div class="search-icon-container">
+          <img src="../assets/pics/loupe.svg" class="search-icon" alt="Loupe"/>
+        </div>
+        <input type="text" class="search"/>
+        <ul>
+          <li v-for="item in itemsList" :key="item.message">
+            <div class="item-card">
+              <img src="../assets/pics/profile-user.svg"/>
+              <p class="name">HELLO</p>
+              <p class="author">{{item.message}}</p>
+              <input type="checkbox" v-model="item.checked"/>
+            </div>
+          </li>
+        </ul>
+      </div>
+      </div>
+      <div class="migration-button">
+        <img class="spinner" v-bind:class="{rotating: isProcessing}" src="../assets/pics/recycle.svg" alt="Recycle" @click="spinnerClick"/>
+      </div>
+      <div class="to-container">
+        <div class="services">
+        <img id="1_to" src="../assets/pics/spotify.png" alt="Spotify"/>
+        <img id="2_to" src="../assets/pics/youtube.png" alt="Youtube"/>
+        <img id="3_to" src="../assets/pics/boom.png" alt="Boom" title="Coming soon"/>
+        <img id="4_to" src="../assets/pics/yandex.png" alt="Yandex" title="Coming soon"/>
+        <img id="5_to" src="../assets/pics/apple.png" alt="Apple" title="Coming soon"/>
+      </div>
+        <div class="message-container"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Home',
-  data () {
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      serviceFromPicked: false,
+      albumsChecked: false,
+      tracksChecked: false,
+      playlistsChecked: false,
+      isProcessing: false,
+      itemsList: [
+        {
+          imageSrc: "",
+          authorName: "",
+          name: "",
+          message: "HELLO",
+          checked: false
+        },
+        {
+          imageSrc: "",
+          authorName: "",
+          name: "",
+          message: "HELLO",
+          checked: false
+        },
+        {
+          imageSrc: "",
+          authorName: "",
+          name: "",
+          message: "HELLO",
+          checked: false
+        },
+        {
+          imageSrc: "",
+          authorName: "",
+          name: "",
+          message: "HELLO",
+          checked: false
+        },
+        {
+          imageSrc: "",
+          authorName: "",
+          name: "",
+          message: "HELLO",
+          checked: false
+        },
+        {
+          imageSrc: "",
+          authorName: "",
+          name: "",
+          message: "HELLO",
+          checked: false
+        },
+      ]
+    }
+  },
+  methods: {
+    onItemsCheck($event) {
+      if (this.serviceFromPicked) {
+        switch ($event.target.id) {
+          case "albums":
+            this.tracksChecked = false;
+            this.playlistsChecked = false;
+            break;
+          case "playlists":
+            this.albumsChecked = false;
+            this.tracksChecked = false;
+            break;
+          case "tracks":
+            this.albumsChecked = false;
+            this.playlistsChecked = false;
+            break;
+        }
+      } else {
+        $event.target.checked = false;
+      }
+    },
+    spinnerClick() {
+      this.isProcessing = !this.isProcessing;
     }
   }
 }
@@ -17,5 +144,241 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.home .main-screen {
+  margin-left: 339px;
+  margin-top: 200px;
+  background: transparent;
+}
 
+.home .main-screen p {
+  width: 491px;
+  overflow-wrap: break-word;
+  font-family: Bungee Outline, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 80px;
+  line-height: 96px;
+  text-align: center;
+  margin-bottom: 0;
+
+  color: #000000;
+}
+
+.home .main-screen img.song-wave {
+  margin-top: 24px;
+  margin-right: 350px;
+}
+
+.home .migration-screen {
+  margin-top: 99px;
+  margin-bottom: 87px;
+  text-align: left;
+}
+
+.home .migration-screen .services {
+  margin-top: 207px;
+  margin-bottom: 39px;
+  text-align: left;
+}
+
+.home .migration-screen .items-checkboxes {
+  text-align: left;
+  margin-bottom: 44px;
+}
+
+.home .migration-screen .items-checkboxes label {
+  font-family: Karma, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 46px;
+
+  color: #657EFF;
+}
+
+.home .migration-screen .services img {
+  width: 65px;
+  height: 65px;
+  padding-right: 15px;
+}
+
+.home .migration-screen .from-container {
+  display: inline-block;
+}
+
+.home .migration-screen .to-container {
+  display: inline-block;
+  position: relative;
+  margin-left: 120px;
+}
+
+.home .migration-screen .items-container {
+  width: 402px;
+  height: 506px;
+
+  background: #C4C4C4;
+  border-radius: 15px;
+
+  overflow-y: auto;
+}
+
+.home .migration-screen .items-container ul {
+  list-style: none;
+  margin-top: 28px;
+  padding-left: 29px;
+}
+
+.home .migration-screen .search-icon-container {
+  width: 36px;
+  height: 43px;
+  background: #657EFF;
+  border-radius: 15px 0 0 15px;
+  border-color: transparent;
+  display: inline-block;
+  margin-left: 43px;
+}
+
+.home .migration-screen .items-container img.search-icon {
+  width: 18px;
+  height: 18px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.home .migration-screen .items-container input.search {
+  margin-top: 28px;
+  width: 266px;
+  height: 37px;
+  display: inline-block;
+
+  background: #657EFF;
+  border-radius: 0 15px 15px 0;
+  border-color: transparent;
+
+  font-family: Karma, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 35px;
+
+  color: rgba(0, 0, 0, 0.48);
+}
+
+.home .migration-screen .items-container .item-card {
+  margin-top: 15px;
+  width: 342px;
+  height: 59px;
+
+  background: #636363;
+  border-radius: 15px;
+
+  position: relative;
+  text-align: left;
+}
+
+.home .migration-screen .items-container .item-card img {
+  width: 46px;
+  height: 46px;
+  margin-left: 7px;
+  margin-top: 7px;
+  display: inline-block;
+}
+
+.home .migration-screen .items-container .item-card p.author {
+  font-family: Karma, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 17px;
+  display: inline-block;
+  margin-left: 18px;
+  margin-top: 33px;
+  position: absolute;
+
+  color: #000000
+}
+
+.home .migration-screen .items-container .item-card p.name {
+  font-family: Karma, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 23px;
+  display: inline-block;
+  margin-bottom: 26px;
+  margin-left: 17px;
+  position: absolute;
+
+  color: #000000;
+}
+
+.home .migration-screen .items-container .item-card input {
+  position: absolute;
+  margin-top: 23px;
+  margin-left: 253px;
+  display: inline-block;
+}
+
+.home .migration-screen .migration-button {
+  display: inline-block;
+  margin-left: 111px;
+
+}
+
+.home .migration-screen .migration-button img.spinner{
+  width: 133px;
+  height: 144px;
+  margin-bottom: 245px;
+}
+
+.rotating
+{
+  -webkit-animation: rotating 1s linear infinite;
+  -moz-animation: rotating 1s linear infinite;
+  -ms-animation: rotating 1s linear infinite;
+  -o-animation: rotating 1s linear infinite;
+  animation: rotating 1s linear infinite;
+}
+
+@keyframes rotating
+{
+  from
+  {
+    transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  to
+  {
+    transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotating
+{
+  from
+  {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  to
+  {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.home .migration-screen .to-container .message-container {
+  width: 402px;
+  height: 581px;
+
+  display: inline-block;
+  background: #C4C4C4;
+  border-radius: 15px;
+}
 </style>

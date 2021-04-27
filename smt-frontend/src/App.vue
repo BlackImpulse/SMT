@@ -28,13 +28,18 @@ export default {
   font-family: "Karma";
   src: local("Karma"), url("./assets/fonts/Karma-Regular.ttf") format("truetype");
 }
+@font-face {
+  font-family: "Bungee Outline";
+  src: local("Bungee Outline"), url("./assets/fonts/BungeeOutline-Regular.ttf") format("truetype");
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   background: linear-gradient(180deg, #C4C4C4 9.06%, #171717 100%);
-  height: 1080px;
+  min-height: 1080px;
+  height: auto;
   width: 100%;
   position: absolute;
   top: 0;
