@@ -7,51 +7,52 @@
     <div class="migration-screen">
       <div class="from-container">
         <div id="from" class="services">
-        <img id="1_from" src="../assets/pics/spotify.png" alt="Spotify"/>
-        <img id="2_from" src="../assets/pics/youtube.png" alt="Youtube"/>
-        <img id="3_from" src="../assets/pics/boom.png" alt="Boom" title="Coming soon"/>
-        <img id="4_from" src="../assets/pics/yandex.png" alt="Yandex" title="Coming soon"/>
-        <img id="5_from" src="../assets/pics/apple.png" alt="Apple" title="Coming soon"/>
-      </div>
-        <div class="items-checkboxes">
-        <label> Albums
-          <input id="albums" type="checkbox" v-model="albumsChecked" @input="onItemsCheck"/>
-        </label>
-        <label> Playlists
-          <input id="playlists" type="checkbox" v-model="playlistsChecked" @input="onItemsCheck"/>
-        </label>
-        <label> Tracks
-          <input id="tracks" type="checkbox" v-model="tracksChecked" @input="onItemsCheck"/>
-        </label>
-      </div>
-        <div class="items-container">
-        <div class="search-icon-container">
-          <img src="../assets/pics/loupe.svg" class="search-icon" alt="Loupe"/>
+          <img id="1_from" src="../assets/pics/spotify.png" alt="Spotify" @click="fromServiceClick"/>
+          <img id="2_from" src="../assets/pics/youtube.png" alt="Youtube" @click="fromServiceClick"/>
+          <img id="3_from" src="../assets/pics/boom.png" alt="Boom" title="Coming soon"/>
+          <img id="4_from" src="../assets/pics/yandex.png" alt="Yandex" title="Coming soon"/>
+          <img id="5_from" src="../assets/pics/apple.png" alt="Apple" title="Coming soon"/>
         </div>
-        <input type="text" class="search"/>
-        <ul>
-          <li v-for="item in itemsList" :key="item.message">
-            <div class="item-card">
-              <img src="../assets/pics/profile-user.svg"/>
-              <p class="name">HELLO</p>
-              <p class="author">{{item.message}}</p>
-              <input type="checkbox" v-model="item.checked"/>
-            </div>
-          </li>
-        </ul>
-      </div>
+        <div class="items-checkboxes">
+          <label> Albums
+            <input id="albums" type="checkbox" v-model="albumsChecked" @input="onItemsCheck"/>
+          </label>
+          <label> Playlists
+            <input id="playlists" type="checkbox" v-model="playlistsChecked" @input="onItemsCheck"/>
+          </label>
+          <label> Tracks
+            <input id="tracks" type="checkbox" v-model="tracksChecked" @input="onItemsCheck"/>
+          </label>
+        </div>
+        <div class="items-container">
+          <div class="search-icon-container">
+            <img src="../assets/pics/loupe.svg" class="search-icon" alt="Loupe"/>
+          </div>
+          <input type="text" class="search"/>
+          <ul>
+            <li v-for="item in itemsList" :key="item.message">
+              <div class="item-card">
+                <img v-bind:src="item.imageSrc"/>
+                <p class="name">{{ item.name }}</p>
+                <p class="author">{{ item.authorName }}</p>
+                <input type="checkbox" v-model="item.checked"/>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="migration-button">
-        <img class="spinner" v-bind:class="{rotating: isProcessing}" src="../assets/pics/recycle.svg" alt="Recycle" @click="spinnerClick"/>
+        <img class="spinner" v-bind:class="{rotating: isProcessing}" src="../assets/pics/recycle.svg" alt="Recycle"
+             @click="spinnerClick"/>
       </div>
       <div class="to-container">
         <div class="services">
-        <img id="1_to" src="../assets/pics/spotify.png" alt="Spotify"/>
-        <img id="2_to" src="../assets/pics/youtube.png" alt="Youtube"/>
-        <img id="3_to" src="../assets/pics/boom.png" alt="Boom" title="Coming soon"/>
-        <img id="4_to" src="../assets/pics/yandex.png" alt="Yandex" title="Coming soon"/>
-        <img id="5_to" src="../assets/pics/apple.png" alt="Apple" title="Coming soon"/>
-      </div>
+          <img id="1_to" src="../assets/pics/spotify.png" alt="Spotify"/>
+          <img id="2_to" src="../assets/pics/youtube.png" alt="Youtube"/>
+          <img id="3_to" src="../assets/pics/boom.png" alt="Boom" title="Coming soon"/>
+          <img id="4_to" src="../assets/pics/yandex.png" alt="Yandex" title="Coming soon"/>
+          <img id="5_to" src="../assets/pics/apple.png" alt="Apple" title="Coming soon"/>
+        </div>
         <div class="message-container"></div>
       </div>
     </div>
@@ -59,64 +60,30 @@
 </template>
 
 <script>
+import TokenService from '@/service/token.service';
+import ServiceService from '@/service/service.service';
+
 export default {
   name: 'Home',
   data() {
     return {
+      fromService: null,
       serviceFromPicked: false,
       albumsChecked: false,
       tracksChecked: false,
       playlistsChecked: false,
       isProcessing: false,
-      itemsList: [
-        {
-          imageSrc: "",
-          authorName: "",
-          name: "",
-          message: "HELLO",
-          checked: false
-        },
-        {
-          imageSrc: "",
-          authorName: "",
-          name: "",
-          message: "HELLO",
-          checked: false
-        },
-        {
-          imageSrc: "",
-          authorName: "",
-          name: "",
-          message: "HELLO",
-          checked: false
-        },
-        {
-          imageSrc: "",
-          authorName: "",
-          name: "",
-          message: "HELLO",
-          checked: false
-        },
-        {
-          imageSrc: "",
-          authorName: "",
-          name: "",
-          message: "HELLO",
-          checked: false
-        },
-        {
-          imageSrc: "",
-          authorName: "",
-          name: "",
-          message: "HELLO",
-          checked: false
-        },
-      ]
+      itemsList: []
+    }
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
     }
   },
   methods: {
     onItemsCheck($event) {
-      if (this.serviceFromPicked) {
+      if (this.serviceFromPicked && this.fromService) {
         switch ($event.target.id) {
           case "albums":
             this.tracksChecked = false;
@@ -131,12 +98,43 @@ export default {
             this.playlistsChecked = false;
             break;
         }
+
+        if (!$event.target.checked) {
+          this.itemsList = [];
+          return;
+        }
+
+        TokenService.getToken(1, this.fromService).then(async (response) => {
+          if (response.data.token) {
+            let methodName = `get${$event.target.id.charAt(0).toUpperCase() + $event.target.id.slice(1)}`
+            this.itemsList = await ServiceService[methodName](response.data.token, this.fromService);
+          } else {
+            window.location.href = response.data.url;
+          }
+        })
       } else {
         $event.target.checked = false;
       }
     },
     spinnerClick() {
       this.isProcessing = !this.isProcessing;
+    },
+    fromServiceClick($event) {
+      if (this.serviceFromPicked && this.fromService !== $event.target.id[0]) {
+        return;
+      }
+      this.serviceFromPicked = !this.serviceFromPicked;
+      if (this.serviceFromPicked) {
+        $event.target.classList.toggle('chosen');
+        this.fromService = $event.target.id[0];
+      } else {
+        $event.target.classList = [];
+        this.albumsChecked = false;
+        this.tracksChecked = false;
+        this.playlistsChecked = false;
+        this.itemsList = [];
+        this.fromService = null;
+      }
     }
   }
 }
@@ -325,14 +323,13 @@ export default {
 
 }
 
-.home .migration-screen .migration-button img.spinner{
+.home .migration-screen .migration-button img.spinner {
   width: 133px;
   height: 144px;
   margin-bottom: 245px;
 }
 
-.rotating
-{
+.rotating {
   -webkit-animation: rotating 1s linear infinite;
   -moz-animation: rotating 1s linear infinite;
   -ms-animation: rotating 1s linear infinite;
@@ -340,18 +337,15 @@ export default {
   animation: rotating 1s linear infinite;
 }
 
-@keyframes rotating
-{
-  from
-  {
+@keyframes rotating {
+  from {
     transform: rotate(0deg);
     -o-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
   }
-  to
-  {
+  to {
     transform: rotate(360deg);
     -o-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
@@ -359,15 +353,13 @@ export default {
     -webkit-transform: rotate(360deg);
   }
 }
-@-webkit-keyframes rotating
-{
-  from
-  {
+
+@-webkit-keyframes rotating {
+  from {
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
   }
-  to
-  {
+  to {
     transform: rotate(360deg);
     -webkit-transform: rotate(360deg);
   }
@@ -380,5 +372,9 @@ export default {
   display: inline-block;
   background: #C4C4C4;
   border-radius: 15px;
+}
+
+.home .migration-screen .services img.chosen {
+  border: 1px solid #FF0000;
 }
 </style>

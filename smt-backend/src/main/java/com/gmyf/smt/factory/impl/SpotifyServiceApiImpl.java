@@ -3,8 +3,12 @@ package com.gmyf.smt.factory.impl;
 import com.gmyf.smt.factory.api.ServiceApi;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.SpotifyHttpManager;
+import com.wrapper.spotify.exceptions.SpotifyWebApiException;
+import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import org.apache.hc.core5.http.ParseException;
 
+import java.io.IOException;
 import java.net.URI;
 
 public class SpotifyServiceApiImpl implements ServiceApi {
@@ -18,10 +22,22 @@ public class SpotifyServiceApiImpl implements ServiceApi {
             .setRedirectUri(redirectUri)
             .build();
 
-    private final AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri().build();
+    private final AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
+            .scope("user-library-read user-library-modify")
+            .build();
 
     @Override
     public String getAuthUrl() {
         return authorizationCodeUriRequest.execute().toString();
+    }
+
+    @Override
+    public String[] getTokens(String code) {
+        try {
+            AuthorizationCodeCredentials authorizationCodeCredentials = spotifyApi.authorizationCode(code).build().execute();
+            return new String[] {authorizationCodeCredentials.getAccessToken(), authorizationCodeCredentials.getRefreshToken()};
+        } catch (ParseException | SpotifyWebApiException | IOException exception) {
+            return null;
+        }
     }
 }

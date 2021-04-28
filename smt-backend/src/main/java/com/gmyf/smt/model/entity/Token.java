@@ -8,28 +8,33 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
 
 
 @Entity
 @Table(name = "token")
 public class Token extends AbstractPersistableEntity {
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "token")
-    private String token;
+    @Column(name = "access_token")
+    private String accessToken;
 
-    @ManyToOne(targetEntity = Service.class, fetch = FetchType.LAZY)
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
+    @ManyToOne(targetEntity = Service.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "service_id")
     private Service service;
 
     public Token() {
     }
 
-    public Token(User user, String token, Service service) {
+    public Token(User user, String accessToken, String refreshToken, Service service) {
         this.user = user;
-        this.token = token;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.service = service;
     }
 
@@ -41,12 +46,12 @@ public class Token extends AbstractPersistableEntity {
         this.user = user;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccessToken(String token) {
+        this.accessToken = token;
     }
 
     public Service getService() {
@@ -55,5 +60,13 @@ public class Token extends AbstractPersistableEntity {
 
     public void setService(Service service) {
         this.service = service;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

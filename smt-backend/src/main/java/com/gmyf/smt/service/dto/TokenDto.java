@@ -4,16 +4,18 @@ public class TokenDto {
     private long id;
     private UserDto user;
     private ServiceDto service;
-    private String token;
+    private String accessToken;
+    private String refreshToken;
 
     public TokenDto() {
     }
 
-    public TokenDto(long id, UserDto user, ServiceDto service, String token) {
+    public TokenDto(long id, UserDto user, ServiceDto service, String accessToken, String refreshToken) {
         this.id = id;
         this.user = user;
         this.service = service;
-        this.token = token;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
     public long getId() {
@@ -40,11 +42,19 @@ public class TokenDto {
         this.service = service;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

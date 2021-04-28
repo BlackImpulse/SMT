@@ -1,24 +1,22 @@
 package com.gmyf.smt.payload;
 
-import com.gmyf.smt.service.dto.TokenDto;
-
 public class TokenPayload {
-    private TokenDto token;
+    private String token;
     private String url;
 
     public TokenPayload() {
     }
 
-    public TokenPayload(TokenDto token, String url) {
+    public TokenPayload(String token, String url) {
         this.token = token;
         this.url = url;
     }
 
-    public TokenDto getToken() {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(TokenDto token) {
+    public void setToken(String token) {
         this.token = token;
     }
 
