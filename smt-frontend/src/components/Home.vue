@@ -28,9 +28,9 @@
           <div class="search-icon-container">
             <img src="../assets/pics/loupe.svg" class="search-icon" alt="Loupe"/>
           </div>
-          <input type="text" class="search"/>
+          <input type="text" class="search" @input="filterItems"/>
           <ul>
-            <li v-for="item in itemsList" :key="item.message">
+            <li v-for="item in activeItemsList" :key="item.message">
               <div class="item-card">
                 <img v-bind:src="item.imageSrc"/>
                 <p class="name">{{ item.name }}</p>
@@ -73,7 +73,8 @@ export default {
       tracksChecked: false,
       playlistsChecked: false,
       isProcessing: false,
-      itemsList: []
+      itemsList: [],
+      activeItemsList: []
     }
   },
   computed: {
@@ -108,6 +109,7 @@ export default {
           if (response.data.token) {
             let methodName = `get${$event.target.id.charAt(0).toUpperCase() + $event.target.id.slice(1)}`
             this.itemsList = await ServiceService[methodName](response.data.token, this.fromService);
+            this.activeItemsList = this.itemsList;
           } else {
             window.location.href = response.data.url;
           }
@@ -120,7 +122,7 @@ export default {
       this.isProcessing = !this.isProcessing;
     },
     fromServiceClick($event) {
-      if (this.serviceFromPicked && this.fromService !== $event.target.id[0]) {
+      if (this.loggedIn && this.serviceFromPicked && this.fromService !== $event.target.id[0]) {
         return;
       }
       this.serviceFromPicked = !this.serviceFromPicked;
@@ -133,7 +135,14 @@ export default {
         this.tracksChecked = false;
         this.playlistsChecked = false;
         this.itemsList = [];
+        this.activeItemsList = [];
         this.fromService = null;
+      }
+    },
+    filterItems($event) {
+      if ($event.target.value && $event.target.value !== "" && this.itemsList.length !== 0) {
+        let regexp = new RegExp($event.target.value + "*");
+        this.activeItemsList = this.itemsList.filter(item => regexp.test(item.name.toLowerCase()));
       }
     }
   }
