@@ -3,9 +3,11 @@ package com.gmyf.smt.service;
 import com.gmyf.smt.dao.api.GenericDao;
 import com.gmyf.smt.service.api.GenericService;
 import com.gmyf.smt.service.dtoconverter.AbstractDtoConverter;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public abstract class AbstractService<T, Dto> implements GenericService<T, Dto> {
     private GenericDao<T> genericDao;
     private AbstractDtoConverter<T, Dto> abstractDtoConverter;

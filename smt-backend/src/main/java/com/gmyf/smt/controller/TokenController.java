@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/api/token")
 public class TokenController {
@@ -19,11 +22,21 @@ public class TokenController {
     public ResponseEntity<?> get(@RequestParam long userId, @RequestParam long serviceId) {
         TokenPayload tokenPayload = new TokenPayload();
         TokenDto tokenDto = tokenService.getTokenByUserIdAndServiceId(userId, serviceId);
+        ServiceApi serviceApi = ServiceApiFactory.getServiceApi(serviceId);
 
         if (tokenDto != null) {
+            Timestamp expiresInTimestamp = new Timestamp(tokenDto.getCreationTimestamp().getTime() + tokenDto.getExpiresIn() * 1000);
+            Timestamp timestampNow = Timestamp.from(Instant.now());
+            if (expiresInTimestamp.before(timestampNow)) {
+                String[] tokens = serviceApi.getNewAccessToken(tokenDto.getRefreshToken());
+                tokenDto.setAccessToken(tokens[0]);
+                tokenDto.setExpiresIn(Integer.parseInt(tokens[1]));
+                tokenDto.setCreationTimestamp(timestampNow);
+                tokenService.saveOrUpdate(tokenDto);
+            }
             tokenPayload.setToken(tokenDto.getAccessToken());
         } else {
-            String url = ServiceApiFactory.getServiceApi(serviceId).getAuthUrl();
+            String url = serviceApi.getAuthUrl();
             tokenPayload.setUrl(url);
         }
 
@@ -36,6 +49,8 @@ public class TokenController {
         String[] tokens = serviceApi.getTokens(code);
         tokenDto.setAccessToken(tokens[0]);
         tokenDto.setRefreshToken(tokens[1]);
+        tokenDto.setExpiresIn(Integer.parseInt(tokens[2]));
+        tokenDto.setCreationTimestamp(Timestamp.from(Instant.now()));
         tokenService.saveOrUpdate(tokenDto);
         return ResponseEntity.ok().build();
     }
