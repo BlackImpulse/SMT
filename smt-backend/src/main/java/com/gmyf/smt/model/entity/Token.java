@@ -9,12 +9,12 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
-
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "token")
 public class Token extends AbstractPersistableEntity {
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -24,17 +24,25 @@ public class Token extends AbstractPersistableEntity {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @ManyToOne(targetEntity = Service.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "expires_in")
+    private int expiresIn;
+
+    @Column(name = "creation_timestamp")
+    private Timestamp creationTimestamp;
+
+    @ManyToOne(targetEntity = Service.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id")
     private Service service;
 
     public Token() {
     }
 
-    public Token(User user, String accessToken, String refreshToken, Service service) {
+    public Token(User user, String accessToken, String refreshToken, int expiresIn, Timestamp creationTimestamp, Service service) {
         this.user = user;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.expiresIn = expiresIn;
+        this.creationTimestamp = creationTimestamp;
         this.service = service;
     }
 
@@ -68,5 +76,21 @@ public class Token extends AbstractPersistableEntity {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public int getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(int expiresIn) {
+        this.expiresIn = expiresIn;
+    }
+
+    public Timestamp getCreationTimestamp() {
+        return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(Timestamp creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
     }
 }

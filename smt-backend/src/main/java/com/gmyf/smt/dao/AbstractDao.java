@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 public abstract class AbstractDao<T extends AbstractPersistableEntity> implements GenericDao<T> {
+    @Autowired
     protected SessionFactory sessionFactory;
     private Class<T> clazz;
 
@@ -31,6 +32,7 @@ public abstract class AbstractDao<T extends AbstractPersistableEntity> implement
 
     @Override
     public void saveOrUpdate(T entity) {
+        sessionFactory.getCurrentSession().clear();
         sessionFactory.getCurrentSession().saveOrUpdate(entity);
     }
 

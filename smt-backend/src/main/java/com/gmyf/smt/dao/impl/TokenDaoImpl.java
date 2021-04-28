@@ -12,7 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 @Repository
-public class TokenDaoImpl extends AbstractDao<Token> implements TokenDao {
+public class  TokenDaoImpl extends AbstractDao<Token> implements TokenDao {
     public TokenDaoImpl() {
         super(Token.class);
     }

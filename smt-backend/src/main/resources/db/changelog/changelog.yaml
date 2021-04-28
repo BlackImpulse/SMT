@@ -114,6 +114,16 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: EXPIRES_IN
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATION_TIMESTAMP
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
                   name: SERVICE_ID
                   type: INT
                   constraints:

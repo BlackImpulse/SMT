@@ -9,7 +9,7 @@ hibernate:
   dialect: org.hibernate.dialect.MySQLDialect
   show-sql: true
   format-sql: false
-  ddl-auto: auto
+  ddl-auto: none
 
 smt:
   app:

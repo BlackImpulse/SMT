@@ -35,8 +35,24 @@ public class SpotifyServiceApiImpl implements ServiceApi {
     public String[] getTokens(String code) {
         try {
             AuthorizationCodeCredentials authorizationCodeCredentials = spotifyApi.authorizationCode(code).build().execute();
-            return new String[] {authorizationCodeCredentials.getAccessToken(), authorizationCodeCredentials.getRefreshToken()};
+            return new String[] {authorizationCodeCredentials.getAccessToken(),
+                    authorizationCodeCredentials.getRefreshToken(),
+                    authorizationCodeCredentials.getExpiresIn().toString()};
         } catch (ParseException | SpotifyWebApiException | IOException exception) {
+            return null;
+        }
+    }
+
+    @Override
+    public String[] getNewAccessToken(String refreshToken) {
+        try {
+            AuthorizationCodeCredentials authorizationCodeCredentials =
+                    spotifyApi.authorizationCodeRefresh(clientId, clientSecret, refreshToken)
+                            .build()
+                            .execute();
+            return new String[] { authorizationCodeCredentials.getAccessToken(),
+                    authorizationCodeCredentials.getExpiresIn().toString() };
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
             return null;
         }
     }

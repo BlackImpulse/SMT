@@ -1,7 +1,9 @@
 package com.gmyf.smt.factory.impl;
 
 import com.gmyf.smt.factory.api.ServiceApi;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -16,7 +18,7 @@ public class YoutubeServiceApiImpl implements ServiceApi {
     private final GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow = new GoogleAuthorizationCodeFlow.Builder(
             new NetHttpTransport(), GsonFactory.getDefaultInstance(), clientId, clientSecret,
             Collections.singletonList(YouTubeScopes.YOUTUBE))
-            .setAccessType("online")
+            .setAccessType("offline")
             .build();
 
     @Override
@@ -33,7 +35,22 @@ public class YoutubeServiceApiImpl implements ServiceApi {
                     .setRedirectUri("http://localhost:8081/youtube")
                     .execute();
 
-            return new String[]{response.getAccessToken(), ""};
+            return new String[]{response.getAccessToken(), response.getRefreshToken(), response.getExpiresInSeconds().toString()};
+        } catch (IOException exception) {
+            return null;
+        }
+    }
+
+    @Override
+    public String[] getNewAccessToken(String refreshToken) {
+        try {
+            TokenResponse response = new GoogleRefreshTokenRequest(new NetHttpTransport(),
+                    GsonFactory.getDefaultInstance(),
+                    refreshToken,
+                    clientId,
+                    clientSecret).execute();
+
+            return new String[]{response.getAccessToken(), response.getRefreshToken(), response.getExpiresInSeconds().toString()};
         } catch (IOException exception) {
             return null;
         }
