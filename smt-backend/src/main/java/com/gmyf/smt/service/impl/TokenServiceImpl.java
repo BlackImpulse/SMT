@@ -1,6 +1,8 @@
 package com.gmyf.smt.service.impl;
 
 import com.gmyf.smt.dao.api.TokenDao;
+import com.gmyf.smt.factory.ServiceApiFactory;
+import com.gmyf.smt.factory.api.ServiceApi;
 import com.gmyf.smt.model.entity.Token;
 import com.gmyf.smt.service.AbstractService;
 import com.gmyf.smt.service.api.TokenService;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.NoResultException;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Service
 public class TokenServiceImpl extends AbstractService<Token, TokenDto> implements TokenService {
@@ -30,5 +34,25 @@ public class TokenServiceImpl extends AbstractService<Token, TokenDto> implement
         } catch (NoResultException exception) {
             return null;
         }
+    }
+
+    @Override
+    public TokenDto getFreshToken(long userId, long serviceId) {
+        TokenDto tokenDto = getTokenByUserIdAndServiceId(userId, serviceId);
+
+        if (tokenDto != null) {
+            Timestamp expiresInTimestamp = new Timestamp(tokenDto.getCreationTimestamp().getTime() + tokenDto.getExpiresIn() * 1000);
+            Timestamp timestampNow = Timestamp.from(Instant.now());
+            if (expiresInTimestamp.before(timestampNow)) {
+                ServiceApi serviceApi = ServiceApiFactory.getServiceApi(serviceId);
+                String[] tokens = serviceApi.getNewAccessToken(tokenDto.getRefreshToken());
+                tokenDto.setAccessToken(tokens[0]);
+                tokenDto.setExpiresIn(Integer.parseInt(tokens[2]));
+                tokenDto.setCreationTimestamp(timestampNow);
+                dao.saveOrUpdate(converter.convertToEntity(tokenDto));
+            }
+        }
+
+        return tokenDto;
     }
 }
