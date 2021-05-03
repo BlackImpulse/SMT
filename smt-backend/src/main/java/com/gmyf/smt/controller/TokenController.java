@@ -4,7 +4,9 @@ import com.gmyf.smt.factory.ServiceApiFactory;
 import com.gmyf.smt.factory.api.ServiceApi;
 import com.gmyf.smt.payload.TokenPayload;
 import com.gmyf.smt.service.api.TokenService;
+import com.gmyf.smt.service.dto.ServiceDto;
 import com.gmyf.smt.service.dto.TokenDto;
+import com.gmyf.smt.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,19 +23,10 @@ public class TokenController {
     @GetMapping("/get")
     public ResponseEntity<?> get(@RequestParam long userId, @RequestParam long serviceId) {
         TokenPayload tokenPayload = new TokenPayload();
-        TokenDto tokenDto = tokenService.getTokenByUserIdAndServiceId(userId, serviceId);
+        TokenDto tokenDto = tokenService.getFreshToken(userId, serviceId);
         ServiceApi serviceApi = ServiceApiFactory.getServiceApi(serviceId);
 
         if (tokenDto != null) {
-            Timestamp expiresInTimestamp = new Timestamp(tokenDto.getCreationTimestamp().getTime() + tokenDto.getExpiresIn() * 1000);
-            Timestamp timestampNow = Timestamp.from(Instant.now());
-            if (expiresInTimestamp.before(timestampNow)) {
-                String[] tokens = serviceApi.getNewAccessToken(tokenDto.getRefreshToken());
-                tokenDto.setAccessToken(tokens[0]);
-                tokenDto.setExpiresIn(Integer.parseInt(tokens[1]));
-                tokenDto.setCreationTimestamp(timestampNow);
-                tokenService.saveOrUpdate(tokenDto);
-            }
             tokenPayload.setToken(tokenDto.getAccessToken());
         } else {
             String url = serviceApi.getAuthUrl();
