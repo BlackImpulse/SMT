@@ -47,13 +47,15 @@
       </div>
       <div class="to-container">
         <div class="services">
-          <img id="1_to" src="../assets/pics/spotify.png" alt="Spotify"/>
-          <img id="2_to" src="../assets/pics/youtube.png" alt="Youtube"/>
+          <img id="1_to" src="../assets/pics/spotify.png" alt="Spotify" @click="toServiceClick"/>
+          <img id="2_to" src="../assets/pics/youtube.png" alt="Youtube" @click="toServiceClick"/>
           <img id="3_to" src="../assets/pics/boom.png" alt="Boom" title="Coming soon"/>
           <img id="4_to" src="../assets/pics/yandex.png" alt="Yandex" title="Coming soon"/>
           <img id="5_to" src="../assets/pics/apple.png" alt="Apple" title="Coming soon"/>
         </div>
-        <div class="message-container"></div>
+        <div class="message-container">
+          {{message}}
+        </div>
       </div>
     </div>
   </div>
@@ -62,23 +64,30 @@
 <script>
 import TokenService from '@/service/token.service';
 import ServiceService from '@/service/service.service';
+import Migration from '@/models/migration';
+import MigrationService from '@/service/migration.service';
 
 export default {
   name: 'Home',
   data() {
     return {
+      migrationId: null,
       fromService: null,
       serviceFromPicked: false,
+      toService: null,
+      serviceToPicked: false,
       albumsChecked: false,
       tracksChecked: false,
       playlistsChecked: false,
       isProcessing: false,
       itemsList: [],
-      activeItemsList: []
+      activeItemsList: [],
+      message: ""
     }
   },
   computed: {
     loggedIn() {
+      console.log(JSON.parse(localStorage.getItem('user')))
       return this.$store.state.auth.status.loggedIn;
     }
   },
@@ -89,19 +98,23 @@ export default {
           case "albums":
             this.tracksChecked = false;
             this.playlistsChecked = false;
+            this.migrationId = 1;
             break;
           case "playlists":
             this.albumsChecked = false;
             this.tracksChecked = false;
+            this.migrationId = 2;
             break;
           case "tracks":
             this.albumsChecked = false;
             this.playlistsChecked = false;
+            this.migrationId = 3;
             break;
         }
 
         if (!$event.target.checked) {
           this.itemsList = [];
+          this.activeItemsList = [];
           return;
         }
 
@@ -119,10 +132,23 @@ export default {
       }
     },
     spinnerClick() {
-      this.isProcessing = !this.isProcessing;
+      if (!this.isProcessing && this.serviceFromPicked && this.serviceFromPicked && this.itemsList.length !== 0) {
+        let migration = new Migration(
+            this.itemsList.filter(item => item.checked).map(item => this.migrationId === 2 ? item.name :
+                item.authorName + " " + item.name),
+            this.fromService,
+            this.toService,
+            this.$store.state.auth.user.username,
+            this.migrationId
+        )
+        this.isProcessing = !this.isProcessing;
+        MigrationService.process(migration).then(() => {
+          this.isProcessing = !this.isProcessing;
+        });
+      }
     },
     fromServiceClick($event) {
-      if (this.loggedIn && this.serviceFromPicked && this.fromService !== $event.target.id[0]) {
+      if (!this.loggedIn || this.serviceFromPicked && this.fromService !== $event.target.id[0]) {
         return;
       }
       this.serviceFromPicked = !this.serviceFromPicked;
@@ -137,6 +163,18 @@ export default {
         this.itemsList = [];
         this.activeItemsList = [];
         this.fromService = null;
+      }
+    },
+    toServiceClick($event) {
+      if (!this.loggedIn || !this.serviceFromPicked && this.serviceToPicked && this.toService !== $event.target.id[0]) {
+        return;
+      }
+      this.serviceToPicked = !this.serviceToPicked;
+      if (this.serviceToPicked) {
+        $event.target.classList.toggle('chosen');
+        this.toService = $event.target.id[0];
+      } else {
+        this.toService = null;
       }
     },
     filterItems($event) {

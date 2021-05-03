@@ -7,16 +7,19 @@ class YoutubeApi {
                 "Authorization": "Bearer " + token,
             }
         }).then(res => {
+            let regexp = new RegExp(" - Topic$");
+
             return res.data.items.map(item => {
                 return {
-                    internalId: item.id,
                     imageSrc: item.snippet.thumbnails.standard.url,
-                    authorName: item.snippet.channelTitle,
+                    authorName: regexp.test(item.snippet.channelTitle) ?
+                        item.snippet.channelTitle.slice(0, item.snippet.channelTitle.length - 8) :
+                        item.snippet.channelTitle,
                     name: item.snippet.title,
                     checked: false
                 }
             })
-        }).catch(err => console.error(err))
+        })
     }
     getAlbums() {
 
@@ -29,14 +32,13 @@ class YoutubeApi {
         }).then(res => {
             return res.data.items.map(item => {
                 return {
-                    internalId: item.id,
                     imageSrc: item.snippet.thumbnails.standard.url,
                     authorName: item.snippet.channelTitle,
                     name: item.snippet.title,
                     checked: false
                 }
             })
-        }).catch(err => console.error(err))
+        })
     }
 }
 
