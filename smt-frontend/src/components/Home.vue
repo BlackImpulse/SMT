@@ -54,7 +54,7 @@
           <img id="5_to" src="../assets/pics/apple.png" alt="Apple" title="Coming soon"/>
         </div>
         <div class="message-container">
-          {{message}}
+          <p>{{message}}</p>
         </div>
       </div>
     </div>
@@ -87,7 +87,6 @@ export default {
   },
   computed: {
     loggedIn() {
-      console.log(JSON.parse(localStorage.getItem('user')))
       return this.$store.state.auth.status.loggedIn;
     }
   },
@@ -124,7 +123,7 @@ export default {
             this.itemsList = await ServiceService[methodName](response.data.token, this.fromService);
             this.activeItemsList = this.itemsList;
           } else {
-            window.location.href = response.data.url;
+            window.open(response.data.url);
           }
         })
       } else {
@@ -142,7 +141,8 @@ export default {
             this.migrationId
         )
         this.isProcessing = !this.isProcessing;
-        MigrationService.process(migration).then(() => {
+        MigrationService.process(migration).then(async (response) => {
+          this.message = response.data;
           this.isProcessing = !this.isProcessing;
         });
       }
@@ -169,13 +169,24 @@ export default {
       if (!this.loggedIn || !this.serviceFromPicked && this.serviceToPicked && this.toService !== $event.target.id[0]) {
         return;
       }
+
       this.serviceToPicked = !this.serviceToPicked;
       if (this.serviceToPicked) {
         $event.target.classList.toggle('chosen');
         this.toService = $event.target.id[0];
       } else {
+        $event.target.classList = [];
         this.toService = null;
       }
+
+      TokenService.getToken(1, this.toService).then(async (response) => {
+        if (!response.data.token) {
+          $event.target.classList = [];
+          this.serviceToPicked = false;
+          this.toService = null;
+          window.open(response.data.url);
+        }
+      })
     },
     filterItems($event) {
       if ($event.target.value && $event.target.value !== "" && this.itemsList.length !== 0) {
@@ -244,7 +255,7 @@ export default {
 .home .migration-screen .services img {
   width: 65px;
   height: 65px;
-  padding-right: 15px;
+  margin-right: 15px;
 }
 
 .home .migration-screen .from-container {
@@ -339,11 +350,13 @@ export default {
   margin-left: 18px;
   margin-top: 33px;
   position: absolute;
+  overflow-x: hidden;
 
   color: #000000
 }
 
 .home .migration-screen .items-container .item-card p.name {
+  width: 220px;
   font-family: Karma, sans-serif;
   font-style: normal;
   font-weight: bold;
@@ -353,6 +366,9 @@ export default {
   margin-bottom: 26px;
   margin-left: 17px;
   position: absolute;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   color: #000000;
 }
@@ -419,9 +435,22 @@ export default {
   display: inline-block;
   background: #C4C4C4;
   border-radius: 15px;
+  vertical-align: bottom;
+}
+
+.home .migration-screen .to-container .message-container p {
+  text-align: center;
+  font-family: Karma, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 23px;
+  color: #000000;
+  margin: 100px;
 }
 
 .home .migration-screen .services img.chosen {
-  border: 1px solid #FF0000;
+  border-radius: 15px;
+  box-shadow: 0 0 25px #FFFFFF;
 }
 </style>

@@ -6,9 +6,9 @@ const API_URL = 'http://localhost:8080/api/migration/';
 class MigrationService {
     process(migration) {
         switch (migration.migrationTypeId) {
-            case "2":
+            case 2:
                 return this.processPlaylists(migration);
-            case "3":
+            case 3:
                 return this.processTracks(migration);
         }
     }
@@ -28,9 +28,7 @@ class MigrationService {
             }
         }, {
             headers:  authHeader()
-        }).then(response => {
-            return response.data;
-        })
+        });
     }
     processPlaylists(migration) {
         return axios.post(API_URL + 'process/playlists', {
@@ -47,9 +45,7 @@ class MigrationService {
             }
         }, {
             headers:  authHeader()
-        }).then(response => {
-            return response.data;
-        })
+        });
     }
 }
 

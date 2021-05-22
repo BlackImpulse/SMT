@@ -20,10 +20,11 @@ export default {
     if (this.code) {
       UserService.getUserIdByUsername(this.$store.state.auth.user.username).then(response => {
         let token = new Token(response.data.id, 2);
-        TokenService.saveToken(token, this.code);
+        TokenService.saveToken(token, this.code).then(() => {
+          window.close();
+        });
       });
     }
-    this.$router.push("/");
   }
 }
 </script>

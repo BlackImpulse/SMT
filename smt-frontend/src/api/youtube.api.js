@@ -11,7 +11,7 @@ class YoutubeApi {
 
             return res.data.items.map(item => {
                 return {
-                    imageSrc: item.snippet.thumbnails.standard.url,
+                    imageSrc: item.snippet.thumbnails.default.url,
                     authorName: regexp.test(item.snippet.channelTitle) ?
                         item.snippet.channelTitle.slice(0, item.snippet.channelTitle.length - 8) :
                         item.snippet.channelTitle,
