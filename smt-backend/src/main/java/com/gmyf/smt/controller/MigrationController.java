@@ -39,7 +39,7 @@ public class MigrationController {
 
         migrationService.saveMigration(migrationPayload, userDto.getId());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Migration ended successfully");
     }
 
     @PostMapping("/process/playlists")
