@@ -17,6 +17,12 @@ class TokenService {
             headers: authHeader()
         })
     }
+
+    deleteByUsernameAndServiceId(username, id) {
+        return axios.delete(API_URL + `delete/${username}/${id}`, {
+            headers: authHeader()
+        });
+    }
 }
 
 export default new TokenService();

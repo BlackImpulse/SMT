@@ -11,7 +11,9 @@ import com.gmyf.smt.service.dtoconverter.MigrationDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NoResultException;
 import java.sql.Date;
+import java.util.List;
 
 @Service
 public class MigrationServiceImpl extends AbstractService<Migration, MigrationDto> implements MigrationService {
@@ -37,5 +39,14 @@ public class MigrationServiceImpl extends AbstractService<Migration, MigrationDt
         migrationDto.setItemsCount(migrationPayload.getNames().size());
         migrationDto.setMigrationTypeDto(migrationPayload.getMigrationType());
         dao.saveOrUpdate(converter.convertToEntity(migrationDto));
+    }
+
+    @Override
+    public List<MigrationDto> getMigrationsByUserId(long id) {
+        try {
+            return converter.convertListToDto(dao.getMigrationsByUserId(id));
+        } catch (NoResultException exception) {
+            return null;
+        }
     }
 }
