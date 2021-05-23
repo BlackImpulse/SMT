@@ -6,6 +6,7 @@ import NotFound from "@/components/NotFound";
 import Login from "@/components/Login";
 import Spotify from "@/components/Spotify";
 import Youtube from "@/components/Youtube";
+import UserProfile from "@/components/UserProfile";
 
 Vue.use(Router);
 
@@ -36,6 +37,11 @@ export default new Router({
             path: '/youtube',
             component: Youtube,
             props: route => ({code: route.query.code})
+        },
+        {
+            path: '/profile',
+            name: "profile",
+            component: UserProfile
         },
         {
             path: '*',

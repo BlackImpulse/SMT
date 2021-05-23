@@ -18,7 +18,7 @@ export default {
   },
   beforeMount() {
     if (this.code) {
-      UserService.getUserIdByUsername(this.$store.state.auth.user.username).then(response => {
+      UserService.getUserByUsername(this.$store.state.auth.user.username).then(response => {
         let token = new Token(response.data.id, 1);
         TokenService.saveToken(token, this.code).then(() => {
           window.close();

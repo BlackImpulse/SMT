@@ -8,19 +8,19 @@ public class MigrationDto {
     private Date date;
     private ServiceDto fromService;
     private ServiceDto toService;
-    private MigrationTypeDto migrationTypeDto;
+    private MigrationTypeDto migrationType;
     private int itemsCount;
 
     public MigrationDto() {
     }
 
-    public MigrationDto(long id, UserDto user, Date date, ServiceDto fromService, ServiceDto toService, MigrationTypeDto migrationTypeDto, int itemsCount) {
+    public MigrationDto(long id, UserDto user, Date date, ServiceDto fromService, ServiceDto toService, MigrationTypeDto migrationType, int itemsCount) {
         this.id = id;
         this.user = user;
         this.date = date;
         this.fromService = fromService;
         this.toService = toService;
-        this.migrationTypeDto = migrationTypeDto;
+        this.migrationType = migrationType;
         this.itemsCount = itemsCount;
     }
 
@@ -64,12 +64,12 @@ public class MigrationDto {
         this.toService = toService;
     }
 
-    public MigrationTypeDto getMigrationTypeDto() {
-        return migrationTypeDto;
+    public MigrationTypeDto getMigrationType() {
+        return migrationType;
     }
 
-    public void setMigrationTypeDto(MigrationTypeDto migrationTypeDto) {
-        this.migrationTypeDto = migrationTypeDto;
+    public void setMigrationTypeDto(MigrationTypeDto migrationType) {
+        this.migrationType = migrationType;
     }
 
     public int getItemsCount() {

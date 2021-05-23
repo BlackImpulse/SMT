@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.List;
 
 @Repository
 public class  TokenDaoImpl extends AbstractDao<Token> implements TokenDao {
@@ -30,5 +31,18 @@ public class  TokenDaoImpl extends AbstractDao<Token> implements TokenDao {
         TypedQuery<Token> getTokenByUserIdAndServiceIdQuery = sessionFactory.getCurrentSession().createQuery(criteriaQuery);
 
         return getTokenByUserIdAndServiceIdQuery.getSingleResult();
+    }
+
+    @Override
+    public List<Token> getTokensByUserId(long userId) {
+        CriteriaBuilder criteriaBuilder = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Token> criteriaQuery = criteriaBuilder.createQuery(Token.class);
+        Root<Token> rootEntry = criteriaQuery.from(Token.class);
+
+        criteriaQuery.where(criteriaBuilder.equal(rootEntry.get("user").get("id"), userId));
+
+        TypedQuery<Token> getTokenByUserIdQuery = sessionFactory.getCurrentSession().createQuery(criteriaQuery);
+
+        return getTokenByUserIdQuery.getResultList();
     }
 }

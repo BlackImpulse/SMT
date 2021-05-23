@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.NoResultException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class TokenServiceImpl extends AbstractService<Token, TokenDto> implements TokenService {
@@ -54,5 +55,14 @@ public class TokenServiceImpl extends AbstractService<Token, TokenDto> implement
         }
 
         return tokenDto;
+    }
+
+    @Override
+    public List<TokenDto> getTokensByUserId(long userId) {
+        try {
+            return converter.convertListToDto(dao.getTokensByUserId(userId));
+        } catch (NoResultException exception) {
+            return null;
+        }
     }
 }

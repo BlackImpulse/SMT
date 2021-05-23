@@ -4,6 +4,7 @@ import com.gmyf.smt.factory.ServiceApiFactory;
 import com.gmyf.smt.factory.api.ServiceApi;
 import com.gmyf.smt.payload.TokenPayload;
 import com.gmyf.smt.service.api.TokenService;
+import com.gmyf.smt.service.api.UserService;
 import com.gmyf.smt.service.dto.ServiceDto;
 import com.gmyf.smt.service.dto.TokenDto;
 import com.gmyf.smt.service.dto.UserDto;
@@ -19,6 +20,9 @@ import java.time.Instant;
 public class TokenController {
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/get")
     public ResponseEntity<?> get(@RequestParam long userId, @RequestParam long serviceId) {
@@ -45,6 +49,14 @@ public class TokenController {
         tokenDto.setExpiresIn(Integer.parseInt(tokens[2]));
         tokenDto.setCreationTimestamp(Timestamp.from(Instant.now()));
         tokenService.saveOrUpdate(tokenDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete/{username}/{serviceId}")
+    public ResponseEntity<?> delete(@PathVariable("username") String username, @PathVariable("serviceId") long serviceId) {
+        long userId = userService.getByUsername(username).getId();
+        TokenDto token = tokenService.getTokenByUserIdAndServiceId(userId, serviceId);
+        tokenService.delete(token.getId());
         return ResponseEntity.ok().build();
     }
 }
